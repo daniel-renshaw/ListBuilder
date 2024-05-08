@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="ListBuilder.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:view="clr-namespace:ListBuilder.View"
+    Shell.FlyoutBehavior="Flyout">
+
+	<Shell.FlyoutHeader>
+		<Grid>
+			<Label Text="Game List Assist" HorizontalOptions="Center" FontSize="Large"/>
+		</Grid>
+	</Shell.FlyoutHeader>
+	<FlyoutItem
+		Title="Lists"
+		Icon="list.png">
+		<ShellContent
+			ContentTemplate="{DataTemplate view:MainPage}"
+			Route="MainPage"/>
+	</FlyoutItem>
+	<FlyoutItem
+		Title="Data Manager"
+		Icon="database.png">
+		<ShellContent
+			ContentTemplate="{DataTemplate view:DataManagementPage}"
+			Route="DataManagementPage"/>
+	</FlyoutItem>
+	<FlyoutItem
+		Title="Data Editor"
+		Icon="edit.png">
+		<ShellContent
+			ContentTemplate="{DataTemplate view:EditorPage}"
+			Route="EditorPage"/>
+	</FlyoutItem>
+
+</Shell>

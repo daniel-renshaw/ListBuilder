@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ListBuilder.View.AddDataPage"
+             xmlns:model="clr-namespace:ListBuilder.Model"
+			 xmlns:viewmodel="clr-namespace:ListBuilder.ViewModel"
+			 x:DataType="viewmodel:AddDataViewModel"
+			 Title="{Binding Title}">
+	<Grid
+		ColumnDefinitions="*"
+		RowDefinitions="Auto,*"
+		RowSpacing="0"
+		VerticalOptions="FillAndExpand">
+		<Border
+			Grid.Row="0"
+			StrokeThickness="2"
+			Background="{StaticResource Primary}">
+			<SearchBar
+				Placeholder="Search repositories..."
+				Text="{Binding SearchString, Mode=TwoWay}"/>
+		</Border>
+		<CollectionView
+			Grid.Row="1"
+			ItemsSource="{Binding DisplayedRepos}">
+			<CollectionView.ItemTemplate IsVisible="{Binding IsNotBusy}">
+				<DataTemplate x:DataType="model:SelectableCard">
+					<Border Style="{StaticResource CardBorder}" Background="{Binding BgColor}">
+						<Border.GestureRecognizers>
+							<TapGestureRecognizer
+										Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AddDataViewModel}}, Path=CardTappedCommand}"
+										CommandParameter="{Binding .}"/>
+						</Border.GestureRecognizers>
+						<Grid>
+							<VerticalStackLayout>
+								<Label Text="{Binding Heading}"/>
+								<Label Text="{Binding Description}"/>
+							</VerticalStackLayout>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+
+		<ImageButton Source="download.png"
+					 Style="{StaticResource BottomRightHoverButton}"
+					 Command="{Binding DownloadDataCommand}"
+					 IsEnabled="{Binding IsNotBusy}"
+					 IsVisible="{Binding HasSelectedSomething}"
+					 MaximumHeightRequest="64"
+					 Grid.RowSpan="2"/>
+
+		<ActivityIndicator IsVisible="{Binding IsBusy}"
+						   IsRunning="{Binding IsBusy}"
+						   Grid.RowSpan="2"
+						   HorizontalOptions="Fill"
+						   VerticalOptions="Center"/>
+	</Grid>
+</ContentPage>

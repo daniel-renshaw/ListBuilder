@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ListBuilder.View.DataManagementPage"
+			 xmlns:model="clr-namespace:ListBuilder.Model"
+			 xmlns:viewmodel="clr-namespace:ListBuilder.ViewModel"
+			 Title="{Binding Title}">
+	<ContentPage.Behaviors>
+		<tk:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCardsCommand}"/>
+	</ContentPage.Behaviors>
+	<Grid
+		ColumnDefinitions="*"
+		RowDefinitions="*,Auto"
+		RowSpacing="0">
+		<CollectionView
+			ItemsSource="{Binding Cards}">
+			<CollectionView.ItemTemplate IsVisible="{Binding IsNotBusy}">
+				<DataTemplate x:DataType="model:BundleCardDisplay">
+					<tk:Expander Style="{StaticResource CardExp}" IsExpanded="{Binding IsExpanded}">
+						<tk:Expander.Header>
+							<Border Style="{StaticResource CardBorder}">
+								<Border.GestureRecognizers>
+									<TapGestureRecognizer
+										Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DataManagementViewModel}}, Path=CardTappedCommand}"
+										CommandParameter="{Binding .}"/>
+								</Border.GestureRecognizers>
+								<Grid>
+									<VerticalStackLayout>
+										<Label Text="{Binding Heading}"/>
+										<Label Text="{Binding Description}" IsVisible="{Binding DoesntNeedUpdate}"/>
+										<Label Text="{Binding Description}" IsVisible="{Binding NeedsUpdate}" TextColor="Red"/>
+									</VerticalStackLayout>
+								</Grid>
+							</Border>
+						</tk:Expander.Header>
+						<Border Style="{StaticResource CardExpBorder}">
+							<Grid ColumnDefinitions="*,*,*">
+								<ImageButton
+									Source="refresh.png"
+									HeightRequest="32"
+									Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DataManagementViewModel}}, Path=UpdateDataCommand}"
+									CommandParameter="{Binding .}"
+									IsVisible="{Binding NeedsUpdate}"
+									Grid.Column="0"
+									HorizontalOptions="Center"/>
+								<ImageButton
+									Source="trash.png"
+									HeightRequest="32"
+									Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DataManagementViewModel}}, Path=DeleteDataCommand}"
+									CommandParameter="{Binding .}"
+									Grid.Column="2"
+									HorizontalOptions="Center"/>
+							</Grid>
+						</Border>
+					</tk:Expander>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+
+		<ImageButton Source="plus_circle.png"
+					 Style="{StaticResource BottomRightHoverButton}"
+					 Command="{Binding GoToAddDataCommand}"
+					 IsEnabled="{Binding IsNotBusy}"
+					 MaximumHeightRequest="64"
+					 Grid.RowSpan="2"/>
+
+		<ActivityIndicator IsVisible="{Binding IsBusy}"
+						   IsRunning="{Binding IsBusy}"
+						   Grid.RowSpan="2"
+						   HorizontalOptions="Fill"
+						   VerticalOptions="Center"/>
+	</Grid>
+</ContentPage>

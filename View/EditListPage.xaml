@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ListBuilder.View.EditListPage"
+			 xmlns:model="clr-namespace:ListBuilder.Model"
+			 xmlns:viewmodel="clr-namespace:ListBuilder.ViewModel"
+             Title="{Binding Title}">
+	<ContentPage.Behaviors>
+		<tk:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadCommand}"/>
+	</ContentPage.Behaviors>
+	<Grid RowDefinitions="Auto,Auto,*">
+		<CollectionView Grid.Row="0"
+						ItemsSource="{Binding GameList.Forces}">
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="model:SelectableCard">
+					<Label Text="{Binding Heading}"/>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+		<Border Style="{StaticResource BaseBorder}" Grid.Row="1">
+			<Picker
+				Title="Add a new force"
+				ItemsSource="{Binding Forces}"
+				SelectedItem="{Binding SelectedForce}"/>
+		</Border>
+		
+		<ActivityIndicator IsVisible="{Binding IsBusy}"
+						   IsRunning="{Binding IsBusy}"
+						   Grid.RowSpan="2"
+						   HorizontalOptions="Fill"
+						   VerticalOptions="Center"/>
+	</Grid>
+</ContentPage>

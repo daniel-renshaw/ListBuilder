@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ListBuilder.View.NewListPage"
+             xmlns:model="clr-namespace:ListBuilder.Model"
+			 xmlns:viewmodel="clr-namespace:ListBuilder.ViewModel"
+			 x:DataType="viewmodel:NewListViewModel"
+			 Title="{Binding Title}">
+	<ContentPage.Behaviors>
+		<tk:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadGamesCommand}"/>
+	</ContentPage.Behaviors>
+	<Grid
+		RowDefinitions="Auto,Auto,*">
+		<Border Style="{StaticResource BaseBorder}" Grid.Row="0">
+			<Grid ColumnDefinitions="Auto,*">
+				<Image
+					Source="file_text.png"
+					HeightRequest="32"/>
+				<Entry
+					Placeholder="Enter List Name..."
+					ClearButtonVisibility="WhileEditing"
+					MaxLength="36"
+					Text="{Binding ListNameString}"
+					Grid.Column="1"/>
+			</Grid>
+		</Border>
+		<Border Style="{StaticResource BaseBorder}" Grid.Row="1">
+			<Grid ColumnDefinitions="Auto,*">
+				<Image
+					Source="database.png"
+					HeightRequest="32"/>
+				<Picker
+					Title="Select a game"
+					ItemsSource="{Binding Games}"
+					ItemDisplayBinding="{Binding NameAndVersion}"
+					SelectedItem="{Binding SelectedGame}"
+					Grid.Column="1"/>
+			</Grid>
+		</Border>
+		<Border Style="{StaticResource CardBorder}"
+				Grid.Row="2"
+				Padding="10"
+				IsVisible="{Binding HasSelectedGame}">
+			<Grid RowDefinitions="Auto,*">
+				<Label Text="Select catalogue(s) to include (can be changed later):"
+					   Margin="5,0,0,5"/>
+				<CollectionView
+					Grid.Row="1"
+					ItemsSource="{Binding Files}">
+					<CollectionView.ItemTemplate IsVisible="{Binding HasSelectedGame}">
+						<DataTemplate x:DataType="model:SelectableCard">
+							<Border Style="{StaticResource CardBorder}" Background="{Binding BgColor}" Padding="10">
+								<Border.GestureRecognizers>
+									<TapGestureRecognizer
+												Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewListViewModel}}, Path=CardTappedCommand}"
+												CommandParameter="{Binding .}"/>
+								</Border.GestureRecognizers>
+								<Label Text="{Binding Heading}"/>
+							</Border>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
+			</Grid>
+		</Border>
+
+		<ImageButton Source="check_circle.png"
+					 Style="{StaticResource BottomRightHoverButton}"
+					 Command="{Binding CompleteListCreationCommand}"
+					 IsEnabled="{Binding HasFilledOutForm}"
+					 MaximumHeightRequest="64"
+					 Grid.RowSpan="3"/>
+
+		<ActivityIndicator IsVisible="{Binding IsBusy}"
+						   IsRunning="{Binding IsBusy}"
+						   HorizontalOptions="Fill"
+						   VerticalOptions="Center"
+						   Grid.RowSpan="3"/>
+	</Grid>
+</ContentPage>

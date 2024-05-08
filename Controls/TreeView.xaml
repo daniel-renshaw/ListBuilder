@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<VerticalStackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+			 xmlns:controls="clr-namespace:ListBuilder.Controls"
+			 xmlns:model="clr-namespace:ListBuilder.Model"
+			 xmlns:viewmodel="clr-namespace:ListBuilder.ViewModel"
+             x:Class="ListBuilder.Controls.TreeView">
+	<VerticalStackLayout.Resources>
+		<ResourceDictionary>
+			<tk:IsNotNullConverter x:Key="IsNotNullConverter"/>
+		</ResourceDictionary>
+	</VerticalStackLayout.Resources>
+	<BindableLayout.ItemTemplate>
+		<DataTemplate>
+			<Border Style="{StaticResource TreeViewBorder}">
+				<tk:Expander Style="{StaticResource CardExp}" IsExpanded="{Binding IsExpanded}">
+					<tk:Expander.Header>
+						<Label Style="{StaticResource TreeViewLabel}" Text="{Binding Display}">
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer
+									Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BaseViewModel}}, Path=NodeTappedCommand}"
+									CommandParameter="{Binding .}"/>
+							</Label.GestureRecognizers>
+						</Label>
+					</tk:Expander.Header>
+					<controls:TreeView BindableLayout.ItemsSource="{Binding Has}" Margin="20,0,0,0"/>
+				</tk:Expander>
+			</Border>
+		</DataTemplate>
+	</BindableLayout.ItemTemplate>
+</VerticalStackLayout>
